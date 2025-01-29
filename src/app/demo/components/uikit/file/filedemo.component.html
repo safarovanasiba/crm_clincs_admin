@@ -1,0 +1,283 @@
+<div class="grid">
+    <div class="col-12">
+        <div class="card">
+            <h5>Advanced</h5>
+            <p-fileUpload name="demo[]" url="./upload.php" (onUpload)="onUpload($event)"
+                          [multiple]="true" accept="image/*" [maxFileSize]="1000000">
+                <ng-template pTemplate="content">
+                    <ul *ngIf="uploadedFiles.length">
+                        <li *ngFor="let file of uploadedFiles">{{file.name}} - {{file.size}} bytes</li>
+                    </ul>
+                </ng-template>
+            </p-fileUpload>
+
+            <h5>Basic</h5>
+            <p-fileUpload mode="basic" name="demo[]" url="./upload.php" accept="image/*" [maxFileSize]="1000000" (onUpload)="onBasicUpload()"></p-fileUpload>
+
+        </div>
+    </div>
+</div>
+
+
+
+<full-calendar [options]="calendarOptions">
+  <ng-template #eventContent let-arg>
+    <b>{{arg.timeText}}</b>
+    <i>{{arg.event.title}}</i>
+  </ng-template>
+</full-calendar>
+
+
+  
+<div class="kanban" cdkDropListGroup>
+    <div class="kanban-column" *ngFor="let column of columns" [cdkDropListData]="column.tasks" cdkDropList (cdkDropListDropped)="onDrop($event)">
+      <h3>{{ column.name }}</h3>
+      <div class="kanban-tasks" cdkDropList (cdkDropListDropped)="onDrop($event)">
+        <div class="kanban-task" *ngFor="let task of column.tasks" cdkDrag>
+          <p>{{ task.title }}</p>
+          <p>{{ task.description }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+
+<style>
+.kanban {
+  display: flex;
+  overflow-x: auto;
+}
+
+.kanban-column {
+  width: 300px;
+  margin-right: 20px;
+  background-color: #f4f4f4;
+  padding: 10px;
+  border-radius: 4px;
+  min-height: 300px;
+}
+
+.kanban-tasks {
+  margin-top: 10px;
+}
+
+.kanban-task {
+  background-color: #fff;
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 10px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  cursor: move;
+}
+</style>
+
+
+
+
+
+
+<div class="grid gap-3 mx-3 xl:mx-4 py-4">
+    <div class="col">
+      <p-card pDroppable styleClass="Todo" (onDrop)="drop('TODO')">
+        <h2>
+          <span>To Do <p-chip [label]="this.todos.length ? this.todos.length : '0'"></p-chip></span>
+          <p-button icon="pi pi-plus" styleClass="p-button-rounded p-button-help p-button-outlined p-button-sm"></p-button>
+        </h2>
+        <div class="list">
+          <ng-container *ngFor="let task of this.todos">
+            <div class="list-item"
+              pDraggable
+              (onDragStart)="dragStart(task)"
+              (onDragEnd)="dragEnd(task)"
+            >
+              <div class="dt">{{ task.createdOn | date : 'dd MMM yyyy'}}</div><!-- dt -->
+              <div class="task-body">
+                <h4>{{ task.name }}</h4>
+                <p>{{ task.descripition }}</p>
+              </div><!-- body -->
+              <div class="task-footer flex justify-content-between">
+                <span><i class="pi pi-user mr-2"></i>{{task.assignee}}</span>
+                <p-chip styleClass="flex-auto" [label]="task.status | titlecase"></p-chip>
+              </div><!-- flex -->
+            </div><!-- item -->
+          </ng-container>  
+        </div><!-- list -->
+      </p-card>
+    </div>
+    <!-- col -->
+    <div class="col">
+      <p-card pDroppable styleClass="InProgress" (onDrop)="drop('InProgress')">
+        <h2>
+          <span>In Progress <p-chip [label]="this.inProgress.length ? this.inProgress.length : '0'"></p-chip></span>
+          <p-button icon="pi pi-plus" styleClass="p-button-rounded p-button-help p-button-outlined p-button-sm"></p-button>
+        </h2>
+        <div class="list">
+          <ng-container *ngFor="let task of this.inProgress">
+            <div class="list-item"
+            pDraggable
+            (onDragStart)="dragStart(task)"
+            (onDragEnd)="dragEnd(task)"
+          >
+            <div class="dt">{{ task.createdOn | date : 'dd MMM yyyy'}}</div><!-- dt -->
+            <div class="task-body">
+              <h4>{{ task.name }}</h4>
+              <p>{{ task.descripition }}</p>
+            </div><!-- body -->
+            <div class="task-footer flex justify-content-between">
+              <span><i class="pi pi-user mr-2"></i>{{task.assignee}}</span>
+              <p-chip styleClass="flex-auto" [label]="task.status | titlecase"></p-chip>
+            </div><!-- flex -->
+          </div><!-- item -->
+          </ng-container>
+        </div><!-- list -->
+      </p-card>
+    </div>
+    <!-- col -->
+    <div class="col">
+      <p-card pDroppable styleClass="Completed" (onDrop)="drop('Completed')">
+        <h2>
+          <span>Completed <p-chip [label]="this.completed.length ? this.completed.length : '0'"></p-chip></span>
+          <p-button icon="pi pi-plus" styleClass="p-button-rounded p-button-help p-button-outlined p-button-sm"></p-button>
+        </h2>
+        <div class="list">
+          <ng-container *ngFor="let task of this.completed">
+            <div class="list-item"
+            pDraggable
+            (onDragStart)="dragStart(task)"
+            (onDragEnd)="dragEnd(task)"
+          >
+            <div class="dt">{{ task.createdOn | date : 'dd MMM yyyy'}}</div><!-- dt -->
+            <div class="task-body">
+              <h4>{{ task.name }}</h4>
+              <p>{{ task.descripition }}</p>
+            </div><!-- body -->
+            <div class="task-footer flex justify-content-between">
+              <span><i class="pi pi-user mr-2"></i>{{task.assignee}}</span>
+              <p-chip styleClass="flex-auto" [label]="task.status | titlecase"></p-chip>
+            </div><!-- flex -->
+          </div><!-- item -->
+          </ng-container>
+        </div><!-- list -->
+      </p-card>
+    </div>
+    <!-- col -->
+  </div>
+
+
+<style>
+    body{
+  min-height: 99.1vh;
+  color: #22222b;
+  background-image: url(https://www.primefaces.org/primeng-v14-lts/window.051ab7f4e3d1ccf2.jpg);
+  background-size: cover;
+  background-repeat: no-repeat;
+  .p-component{
+    font-family: 'Inter', sans-serif!important;
+  }
+}
+.p-card{
+  box-shadow: none;
+  border:1px solid #ffffff33;
+  backdrop-filter: blur(10px);
+  border-radius: 8px;
+  background: #ffffff33;
+  border-top: 6px solid #ffffff99;
+  &.InProgress{
+    .list{
+      .list-item{
+        .p-chip{
+          .p-chip-text{
+            color: #17a3d4;
+          }
+        }
+      }
+    }
+  }
+  &.Completed{
+    .list{
+      .list-item{
+        .p-chip{
+          .p-chip-text{
+            color: #55ae22;
+          }
+        }
+      }
+    }
+  }
+  .p-card-body{
+    padding: 0.4rem 1rem 0;
+  }
+  h2{
+    font-size: 16px;
+    padding: 0 0 0.6rem;
+    margin: 0 0 0.6rem;
+    font-weight: 600;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    .p-chip{
+      background-color: #dcf2fc83;
+      margin: 0 0 0 0.5rem;
+      .p-chip-text{
+        font-size: 12px;
+      }
+    }
+    .p-button-rounded{
+      height: 2rem!important;
+      width: 2rem;
+    }
+  }
+  .list{
+    .list-item{
+      padding: 1rem 0.7rem;
+      background: rgba(255, 255, 255, 0.3);
+      margin: 0 0 0.4rem;
+      border-radius: 4px;
+      color: #695353;
+      cursor: move;
+      .p-chip{
+        background-color: #ffffff75;
+        .p-chip-text{
+          font-size: 12px;
+          color: #7f7f92;
+          line-height: 1;
+        }
+      }
+      .dt{
+        font-size: 12px;
+        text-align: right;
+        color: #22222b7d;
+        padding: 0 0 0.5rem ;
+        margin: 0 0 1rem;
+        border-bottom: 1px solid #ffffff24;
+      }
+      .task-body{
+        font-size: 14px;
+        h4{
+          font-weight: 600;
+          margin: 0 0 0.4rem;
+          padding: 0;
+        }
+        p{
+          font-weight: 300;
+          margin: 0;
+          display: -webkit-box;
+          -webkit-box-orient: vertical;  
+          overflow: hidden;
+        }
+      }
+      .task-footer{
+        border-top: 1px solid #ffffff24;
+        padding: 0.5rem 0 0;
+        margin: 1rem 0 0;
+        font-size: 12px;
+        color: #22222b7d;
+        .pi{
+          font-size: 12px;
+        }
+      }
+    }
+  }
+}
+</style>
